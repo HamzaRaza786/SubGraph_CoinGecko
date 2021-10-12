@@ -1,9 +1,11 @@
-type ExampleEntity @entity {
+type Token @entity {
   id: ID!
   count: BigInt!
-  src:String
+  src:Bytes
 }
-type Sample @entity {
+type DayValuation @entity {
   id: ID!
+  src:Bytes
   count: BigInt!
+  lastBlock:Int!
 }

@@ -1,6 +1,6 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { Dai, Approval, Transfer } from "../generated/Dai/Dai"
-import { ExampleEntity, Sample } from "../generated/schema"
+import { Token, DayValuation} from "../generated/schema"
 
 export function handleApproval(event: Approval): void {
   // // Entities can be loaded from the store using a string ID; this ID
@@ -58,33 +58,41 @@ export function handleApproval(event: Approval): void {
 
 
 export function handleTransfer(event: Transfer): void {
-  let entity = ExampleEntity.load("0")
+  // let entity = ExampleEntity.load("0")
   
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity("0")
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-    let en = Sample.load(event.transaction.from.toHex())
-    if(!en){
-      en = new Sample(event.transaction.from.toHex())
+  // // Entities only exist after they have been saved to the store;
+  // // `null` checks allow to create entities on demand
+  // if (!entity) {
+  //   entity = new ExampleEntity("0")
+  //   // Entity fields can be set using simple assignments
+  //   entity.count = BigInt.fromI32(0)
+  // }
+    let entity = Token.load(event.address.toHex())
+    let en = DayValuation.load(event.address.toHex())
+    if(!entity || !en){ 
+      entity = new Token(event.address.toHex())
+      entity.src = event.address;
+      entity.count = BigInt.fromI32(0)
+      
+      en = new DayValuation(event.address.toHex())
+      en.src = event.address;
       en.count = BigInt.fromI32(0)
+      en.lastBlock = event.block.timestamp.toI32()
+    }
+    if((event.block.timestamp.toI32() - en.lastBlock.toI32()) >= 86400){
+      en.count = BigInt.fromI32(0)
+      en.lastBlock = event.block.timestamp.toI32()
     }
     en.count = en.count.plus(BigInt.fromI32(1))
+    entity.count = entity.count.plus(BigInt.fromI32(1))
     en.save()
-    if (typeof event.transaction.to === "string"){
-      { 
-        entity.src = Address.fromString(event.transaction.to);
-      }
+    entity.save()
+  //   entity.src = event.address;
+  // // BigInt and BigDecimal math are supported
+  // entity.count = entity.count.plus(BigInt.fromI32(1))
+  // // Entity fields can be set based on event parameters
+  // // entity.src = event.params.src
 
-    }
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count.plus(BigInt.fromI32(1))
-  // Entity fields can be set based on event parameters
-  // entity.src = event.params.src
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
+  // // Entities can be written to the store with `.save()`
+  // entity.save()
 }
