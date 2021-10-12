@@ -1,0 +1,17 @@
+{
+  "name": "coin_gecko",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ HamzaRaza786/coin_gecko",
+    "create-local": "graph create --node http://localhost:8020/ HamzaRaza786/coin_gecko",
+    "remove-local": "graph remove --node http://localhost:8020/ HamzaRaza786/coin_gecko",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 HamzaRaza786/coin_gecko"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.22.2",
+    "@graphprotocol/graph-ts": "0.22.1",
+    "tsconfig": "^7.0.0"
+  }
+}

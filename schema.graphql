@@ -1,0 +1,9 @@
+type ExampleEntity @entity {
+  id: ID!
+  count: BigInt!
+  src:String
+}
+type Sample @entity {
+  id: ID!
+  count: BigInt!
+}
